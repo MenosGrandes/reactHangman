@@ -1,23 +1,24 @@
-export function keyboardClickReducer(state, payload)
-{   let points_ = state.points;
-    let clone = state.letters.map( (elem) => 
-    {
-        let e = elem;
-        if(elem.letter === payload.payload)
-        {
-            e.isVisible = true;
-            points_ ++;
-        }
-        return e;
-    
-    } );
-
-    if(JSON.stringify(clone) == JSON.stringify(state.letters))
-    {
-        points_--;
+export function keyboardClickReducer(state, payload) {
+  let found = false;
+  let clone = state.letters.map((elem) => {
+    if (elem.letter === payload.payload) {
+      found = true;
+      if (!elem.isVisible) {
+        elem.isVisible = true;
+        state.points++;
+      }
     }
-    
+    return elem;
+  });
 
-        return {letters : clone, points : points_ }
+  if (!found) {
+    state.points--;
+    state.hangmanPoints+=1;
+  }
 
+  return {
+    letters: clone,
+    points: state.points,
+    hangmanPoints: state.hangmanPoints,
+  };
 }
